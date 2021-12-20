@@ -9,23 +9,32 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class GamePanel extends JPanel {
+
 	private static final long serialVersionUID = 1L;
-	// ½çÃæĞĞÊı
-	private int rows;
-	// ½çÃæÁĞÊı
-	private int cols;
-	// Õ¨µ¯Êı
-	private int bombCount;
-	// Ã¿¸ö·½¸ñ¿í¶È
-	private final int BLOCKWIDTH = 20;
-	// Ã¿¸ö·½¸ñ³¤¶È
-	private final int BLOCKHEIGHT = 20;
-	// ´æ´¢½çÃæÖĞÃ¿Ò»¸ö·½¸ñµÄ»æÖÆĞÅÏ¢
-	private JLabel[][] labels;
-	private  MyButton[][] buttons;
+
+	// ç•Œé¢è¡Œæ•°
+	private final int rows;
+
+	// ç•Œé¢åˆ—æ•°
+	private final int cols;
+
+	// ç‚¸å¼¹æ•°
+	private final int bombCount;
+
+	// æ¯ä¸ªæ–¹æ ¼å®½åº¦
+	private final int BLOCK_WIDTH = 30;
+
+	// æ¯ä¸ªæ–¹æ ¼é•¿åº¦
+	private final int BLOCK_HEIGHT = 30;
+
+	// å­˜å‚¨ç•Œé¢ä¸­æ¯ä¸€ä¸ªæ–¹æ ¼çš„ç»˜åˆ¶ä¿¡æ¯
+	private final JLabel[][] labels;
+
+	private final MyButton[][] buttons;
+
 	private final int[][] offset = {{-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}};
 
-	// ¹¹Ôì·½·¨,³õÊ¼»¯²ÎÊı
+	// æ„é€ æ–¹æ³•,åˆå§‹åŒ–å‚æ•°
 	public GamePanel(int rows, int cols) {
 		this.rows = rows;
 		this.cols = cols;
@@ -37,22 +46,22 @@ public class GamePanel extends JPanel {
 		this.initLabels();
 	}
 
-	// ½çÃæ³õÊ¼»¯,»æÖÆÉ¨À×µÄ±ß¿ò
+	// ç•Œé¢åˆå§‹åŒ–,ç»˜åˆ¶æ‰«é›·çš„è¾¹æ¡†
 	private void initLabels(){
 		for (int i = 0; i < this.rows; i++) {
 			for (int j = 0; j < this.cols; j++) {
 				JLabel l = new JLabel("", JLabel.CENTER);
-				// ÉèÖÃÃ¿¸öĞ¡·½¸ñµÄ±ß½ç
-				l.setBounds(j * BLOCKWIDTH, i * BLOCKHEIGHT, BLOCKWIDTH, BLOCKHEIGHT);
-				// »æÖÆ·½¸ñ±ß¿ò
+				// è®¾ç½®æ¯ä¸ªå°æ–¹æ ¼çš„è¾¹ç•Œ
+				l.setBounds(j * BLOCK_WIDTH, i * BLOCK_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT);
+				// ç»˜åˆ¶æ–¹æ ¼è¾¹æ¡†
 				l.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-				// ÉèÖÃ·½¸ñÎªÍ¸Ã÷,±ãÓÚÎÒÃÇÌî³äÑÕÉ«
+				// è®¾ç½®æ–¹æ ¼ä¸ºé€æ˜,ä¾¿äºæˆ‘ä»¬å¡«å……é¢œè‰²
 				l.setOpaque(true);
-				// ±³¾°Ìî³äÎª»ÆÉ«
-				l.setBackground(Color.YELLOW);
-				// ½«·½¸ñ¼ÓÈëµ½ÈİÆ÷ÖĞ(¼´Ãæ°åJPanel)
+				// èƒŒæ™¯å¡«å……ä¸ºç°è‰²
+				l.setBackground(Color.LIGHT_GRAY);
+				// å°†æ–¹æ ¼åŠ å…¥åˆ°å®¹å™¨ä¸­(å³é¢æ¿JPanel)
 				this.add(l);
-				// ½«·½¸ñ´æµ½Àà±äÁ¿ÖĞ,·½±ã¹«ÓÃ
+				// å°†æ–¹æ ¼å­˜åˆ°ç±»å˜é‡ä¸­,æ–¹ä¾¿å…¬ç”¨
 				labels[i][j] = l;
 			}
 		}
@@ -60,44 +69,43 @@ public class GamePanel extends JPanel {
 		writeNumber();
 	}
 
-
-	// ²úÉúbombCount¸öÕ¨µ¯,²¢ÔÚlabelsÖĞÓÃ"*"±ê×¢³öÀ´
+	// äº§ç”ŸbombCountä¸ªç‚¸å¼¹,å¹¶åœ¨labelsä¸­ç”¨"ğŸ’£"æ ‡æ³¨å‡ºæ¥
 	private void randomBomb() {
 		for (int i = 0; i < this.bombCount; i++) {
-			// Éú³ÉÒ»¸öËæ»úÊı±íÊ¾ĞĞ×ø±ê
+			// ç”Ÿæˆä¸€ä¸ªéšæœºæ•°è¡¨ç¤ºè¡Œåæ ‡
 			int rRow = (int) (Math.random() * this.rows);
-			// Éú³ÉÒ»¸öËæ»úÊı±íÊ¾ÁĞ×ø±ê
+			// ç”Ÿæˆä¸€ä¸ªéšæœºæ•°è¡¨ç¤ºåˆ—åæ ‡
 			int rCol = (int) (Math.random() * this.cols);
-			// ¸ù¾İ×ø±êÈ·¶¨JLabelµÄÎ»ÖÃ,²¢ÏÔÊ¾*
-			this.labels[rRow][rCol].setText("*");
-			// ÉèÖÃ±³¾°ÑÕÉ«
-			this.labels[rRow][rCol].setBackground(Color.DARK_GRAY);
-			// ÉèÖÃ*µÄÑÕÉ«
+			// æ ¹æ®åæ ‡ç¡®å®šJLabelçš„ä½ç½®,å¹¶æ˜¾ç¤ºğŸ’£
+			this.labels[rRow][rCol].setText("\uD83D\uDCA3");
+			// è®¾ç½®èƒŒæ™¯é¢œè‰²
+			this.labels[rRow][rCol].setBackground(Color.LIGHT_GRAY);
+			// è®¾ç½®ğŸ’£çš„é¢œè‰²
 			this.labels[rRow][rCol].setForeground(Color.RED);
 		}
 	}
 
-	// ½«Õ¨µ¯µÄÖÜÎ§±ê×¢ÉÏÊı×Ö
+	// å°†ç‚¸å¼¹çš„å‘¨å›´æ ‡æ³¨ä¸Šæ•°å­—
 	private void writeNumber() {
 		for (int  i = 0; i < this.rows; i++) {
 			for (int j = 0; j < this.cols; j++) {
-				// Èç¹ûÊÇÕ¨µ¯,²»±ê×¢ÈÎºÎÊı×Ö
-				if (labels[i][j].getText().equals("*")) {
+				// å¦‚æœæ˜¯ç‚¸å¼¹,ä¸æ ‡æ³¨ä»»ä½•æ•°å­—
+				if (labels[i][j].getText().equals("\uD83D\uDCA3")) {
 					continue;
 				}
-				// Èç¹û²»ÊÇÕ¨µ¯,±éÀúËüÖÜÎ§µÄ°Ë¸ö·½¿é,½«Õ¨µ¯µÄ×Ü¸öÊı±ê×¢ÔÚÕâ¸ö·½¸ñÉÏ
-				// ·½¿éÖÜÎ§µÄ8¸ö·½¿éÖĞÕ¨µ¯¸öÊı
+				// å¦‚æœä¸æ˜¯ç‚¸å¼¹,éå†å®ƒå‘¨å›´çš„å…«ä¸ªæ–¹å—,å°†ç‚¸å¼¹çš„æ€»ä¸ªæ•°æ ‡æ³¨åœ¨è¿™ä¸ªæ–¹æ ¼ä¸Š
+				// æ–¹å—å‘¨å›´çš„8ä¸ªæ–¹å—ä¸­ç‚¸å¼¹ä¸ªæ•°
 				int bombCount = 0;
-				// Í¨¹ıÆ«ÒÆÁ¿Êı×éÑ­»·±éÀú8¸ö·½¿é
+				// é€šè¿‡åç§»é‡æ•°ç»„å¾ªç¯éå†8ä¸ªæ–¹å—
 				for (int[] off: offset) {
 					int row = i + off[1];
 					int col = j + off[0];
-					// ÅĞ¶ÏÊÇ·ñÔ½½ç,ÊÇ·ñÎªÕ¨µ¯
-					if (verify(row, col) && labels[row][col].getText().equals("*")) {
+					// åˆ¤æ–­æ˜¯å¦è¶Šç•Œ,æ˜¯å¦ä¸ºç‚¸å¼¹
+					if (verify(row, col) && labels[row][col].getText().equals("\uD83D\uDCA3")) {
 						bombCount++;
 					}
 				}
-				// Èç¹ûÕ¨µ¯µÄ¸öÊı²»Îª0,±ê×¢³öÀ´
+				// å¦‚æœç‚¸å¼¹çš„ä¸ªæ•°ä¸ä¸º0,æ ‡æ³¨å‡ºæ¥
 				if (bombCount > 0) {
 					labels[i][j].setText(String.valueOf(bombCount));
 				}
@@ -105,52 +113,50 @@ public class GamePanel extends JPanel {
 		}
 	}
 
-	// ÅĞ¶ÏÎ»ÖÃÊÇ·ñÔ½½ç
+	// åˆ¤æ–­ä½ç½®æ˜¯å¦è¶Šç•Œ
 	private boolean verify(int row, int col) {
 		return row >= 0 && row < this.rows && col >= 0 && col < this.cols;
 	}
 
-	// ³õÊ¼»¯°´Å¥,½«JLabel¸²¸Ç×¡
+	// åˆå§‹åŒ–æŒ‰é’®,å°†JLabelè¦†ç›–ä½
 	private void initButtons() {
-		// Ñ­»·Éú³É°´Å¥
+		// å¾ªç¯ç”ŸæˆæŒ‰é’®
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
 				MyButton btn = new MyButton();
-				// ¸ù¾İJLabel´óĞ¡ÉèÖÃ°´Å¥µÄ´óĞ¡±ß½ç
-				btn.setBounds(j * BLOCKWIDTH, i * BLOCKHEIGHT, BLOCKWIDTH, BLOCKHEIGHT);
+				// æ ¹æ®JLabelå¤§å°è®¾ç½®æŒ‰é’®çš„å¤§å°è¾¹ç•Œ
+				btn.setBounds(j * BLOCK_WIDTH, i * BLOCK_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT);
 				this.add(btn);
-				// ½«°´Å¥´æÔÚÀà±äÁ¿ÖĞ(µ±È»,Êµ¼ÊÉÏ´æµÄÊÇ¶ÔÏóµÄÒıÓÃµØÖ·)
+				// å°†æŒ‰é’®å­˜åœ¨ç±»å˜é‡ä¸­(å½“ç„¶,å®é™…ä¸Šå­˜çš„æ˜¯å¯¹è±¡çš„å¼•ç”¨åœ°å€)
 				buttons[i][j] = btn;
 				btn.row = i;
 				btn.col = j;
-				// ¸ø°´Å¥Ìí¼Ó¼àÌıÆ÷,×¢²áµã»÷ÊÂ¼ş
-				// (µ¥»ú°´Å¥Ê±,½«Ö´ĞĞÄÚ²¿ÀàActionListener()ÖĞµÄactionPerformed(ActionEvent e)·½·¨)
+				// ç»™æŒ‰é’®æ·»åŠ ç›‘å¬å™¨,æ³¨å†Œç‚¹å‡»äº‹ä»¶
+				// (å•æœºæŒ‰é’®æ—¶,å°†æ‰§è¡Œå†…éƒ¨ç±»ActionListener()ä¸­çš„actionPerformed(ActionEvent e)æ–¹æ³•)
 				btn.addActionListener(new ActionListener() {
-
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						// TODO Auto-generated method stub
 						open((MyButton) e.getSource());
 					}});
 			}
 		}
 	}
 
-	// µ¥»÷°´Å¥Ê±´ò¿ª»ò³ÉÆ¬´ò¿ª
+	// å•å‡»æŒ‰é’®æ—¶æ‰“å¼€æˆ–æˆç‰‡æ‰“å¼€
 	private void open(MyButton btn) {
-		// ÏÈ½«µ±ÆÚ°´Å¥ÉèÖÃÎª²»¿É¼û,¼´´ò¿ªÁË°´Å¥
+		// å…ˆå°†å½“æœŸæŒ‰é’®è®¾ç½®ä¸ºä¸å¯è§,å³æ‰“å¼€äº†æŒ‰é’®
 		btn.setVisible(false);
-		// ÅĞ¶Ï°´Å¥ÖĞ ÊÇ·ñÎªÊı×Ö»¹ÊÇ¿Õ
+		// åˆ¤æ–­æŒ‰é’®ä¸­ æ˜¯å¦ä¸ºæ•°å­—è¿˜æ˜¯ç©º
 		switch (labels[btn.row][btn.col].getText()) {
-			// Èç¹ûÊÇÕ¨µ¯Ôò½«È«²¿°´Å¥¶¼´ò¿ª,ÓÎÏ·½áÊø
-			case "*" :
+			// å¦‚æœæ˜¯ç‚¸å¼¹åˆ™å°†å…¨éƒ¨æŒ‰é’®éƒ½æ‰“å¼€,æ¸¸æˆç»“æŸ
+			case "\uD83D\uDCA3" :
 				for (int i = 0; i < rows; i++) {
 					for (int j = 0; j < cols; j++) {
 						buttons[i][j].setVisible(false);
 					}
 				}
 				break;
-			// Èç¹ûÊÇ¿ÕµÄÔò½«ËûÖÜÎ§¿ÕµÄ°´Å¥¶¼´ò¿ª,½øÈëµİ¹é
+			// å¦‚æœæ˜¯ç©ºçš„åˆ™å°†ä»–å‘¨å›´ç©ºçš„æŒ‰é’®éƒ½æ‰“å¼€,è¿›å…¥é€’å½’
 			case "" :
 				for (int[] off: offset) {
 					int newRow = btn.row + off[0];
@@ -166,10 +172,11 @@ public class GamePanel extends JPanel {
 		}
 	}
 
-	// ¼ÆËã¿íºÍ¸ß,²¢´«¸øÈİÆ÷
+	// è®¡ç®—å®½å’Œé«˜,å¹¶ä¼ ç»™å®¹å™¨
 	public int[] returnSize() {
-		// ÒòÎª´°ÌåµÄ²Ëµ¥À¸,±ß¿òÒ²ÒªÕ¼ÓÃÏñËØ,ËùÒÔ¼ÓÉÏ20ºÍ40ĞŞÕı´óĞ¡
-		int[] a = {this.cols * BLOCKWIDTH + 20, this.rows * BLOCKHEIGHT + 40};
+		// å› ä¸ºçª—ä½“çš„èœå•æ ,è¾¹æ¡†ä¹Ÿè¦å ç”¨åƒç´ ,æ‰€ä»¥åŠ ä¸Š20å’Œ40ä¿®æ­£å¤§å°
+		int[] a = {this.cols * BLOCK_WIDTH + 20, this.rows * BLOCK_HEIGHT + 40};
 		return a;
 	}
+
 }

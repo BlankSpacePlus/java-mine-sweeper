@@ -4,21 +4,23 @@ import java.awt.Container;
 import javax.swing.JFrame;
 
 public class Game {
+
 	public static void main(String[] args) {
-		// ´´½¨JFrame¶ÔÏó×÷ÎªÈİÆ÷
+		// åˆ›å»ºJFrameå¯¹è±¡ä½œä¸ºå®¹å™¨
 		JFrame w = new JFrame();
-		// ´´½¨mainPanel¶ÔÏó,³õÊ¼»¯Ò»¸ö20*30µÄ·½¸ñ´°Ìå
+		// åˆ›å»ºmainPanelå¯¹è±¡,åˆå§‹åŒ–ä¸€ä¸ª20*30çš„æ–¹æ ¼çª—ä½“
 		GamePanel mainPanel = new GamePanel(20, 30);
-		// »ñÈ¡JFrameÓ¦¸øÉèÖÃµÄ¿í¶ÈºÍ¸ß¶È
+		// è·å–JFrameåº”ç»™è®¾ç½®çš„å®½åº¦å’Œé«˜åº¦
 		int[] a = mainPanel.returnSize();
-		// ÉèÖÃJFame¿íºÍ¸ß
+		// è®¾ç½®JFameå®½å’Œé«˜
 		w.setSize(a[0], a[1]);
-		//±êÌâ
-		w.setTitle("É¨À×");
-		//´°Ìå¹Ø±ÕÔò³ÌĞòÍË³ö
+		// æ ‡é¢˜
+		w.setTitle("æ‰«é›·");
+		// çª—ä½“å…³é—­åˆ™ç¨‹åºé€€å‡º
 		w.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Container c = w.getContentPane();
 		c.add(mainPanel);
 		w.setVisible(true);
 	}
+
 }
