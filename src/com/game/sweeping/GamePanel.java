@@ -21,35 +21,35 @@ import javax.swing.JPanel;
  */
 public class GamePanel extends JPanel {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	// 界面行数
-	private final int rows;
+    // 界面行数
+    private final int rows;
 
-	// 界面列数
-	private final int cols;
+    // 界面列数
+    private final int cols;
 
-	// 炸弹数
-	private final int bombCount;
+    // 炸弹数
+    private final int bombCount;
 
-	// 存储界面中每一个方格Label的绘制信息
-	private final JLabel[][] labels;
+    // 存储界面中每一个方格Label的绘制信息
+    private final JLabel[][] labels;
 
     // 存储界面中每一个方块按钮的绘制信息
-	private final MyButton[][] buttons;
+    private final MyButton[][] buttons;
 
-	public GamePanel(int rows, int cols) {
-		this.rows = rows;
-		this.cols = cols;
-		this.bombCount = rows * cols / 10;
-		this.labels = new JLabel[rows][cols];
-		this.buttons = new MyButton[rows][cols];
-		this.setLayout(null);
-		this.initButtons();
-		this.initLabels();
+    public GamePanel(int rows, int cols) {
+        this.rows = rows;
+        this.cols = cols;
+        this.bombCount = rows * cols / 10;
+        this.labels = new JLabel[rows][cols];
+        this.buttons = new MyButton[rows][cols];
+        this.setLayout(null);
+        this.initButtons();
+        this.initLabels();
         this.initRandomBomb();
         this.initNumber();
-	}
+    }
 
     /**
      * 初始化按钮数组
@@ -90,53 +90,53 @@ public class GamePanel extends JPanel {
     /**
      * 初始化绘制扫雷的边框
      */
-	private void initLabels(){
-		for (int i = 0; i < this.rows; i++) {
-			for (int j = 0; j < this.cols; j++) {
-				JLabel label = new JLabel(BLANK_SPACE, JLabel.CENTER);
-				// 设置每个小方格的边界
-				label.setBounds(j * BLOCK_WIDTH, i * BLOCK_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT);
-				// 绘制方格边框
-				label.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-				// 设置方格为透明，便于填充颜色
-				label.setOpaque(true);
-				// 背景填充为灰色
-				label.setBackground(Color.LIGHT_GRAY);
-				// 将方格加入到Panel中
-				this.add(label);
-				// 将方格引用存一下
-				labels[i][j] = label;
-			}
-		}
-	}
+    private void initLabels(){
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.cols; j++) {
+                JLabel label = new JLabel(BLANK_SPACE, JLabel.CENTER);
+                // 设置每个小方格的边界
+                label.setBounds(j * BLOCK_WIDTH, i * BLOCK_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT);
+                // 绘制方格边框
+                label.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+                // 设置方格为透明，便于填充颜色
+                label.setOpaque(true);
+                // 背景填充为灰色
+                label.setBackground(Color.LIGHT_GRAY);
+                // 将方格加入到Panel中
+                this.add(label);
+                // 将方格引用存一下
+                labels[i][j] = label;
+            }
+        }
+    }
 
     /**
      * 产生bombCount个炸弹并在labels中用💣标注出来
      */
-	private void initRandomBomb() {
-		for (int i = 0; i < this.bombCount; i++) {
-			// 生成一个随机数表示行坐标
-			int randomRow = (int) (Math.random() * this.rows);
-			// 生成一个随机数表示列坐标
-			int randomCol = (int) (Math.random() * this.cols);
-			// 根据坐标确定Label的位置并显示💣
-			this.labels[randomRow][randomCol].setText(BOMB_EMOJI);
-			// 设置背景颜色
-			this.labels[randomRow][randomCol].setBackground(Color.LIGHT_GRAY);
-			// 设置💣的颜色
-			this.labels[randomRow][randomCol].setForeground(Color.RED);
-		}
-	}
+    private void initRandomBomb() {
+        for (int i = 0; i < this.bombCount; i++) {
+            // 生成一个随机数表示行坐标
+            int randomRow = (int) (Math.random() * this.rows);
+            // 生成一个随机数表示列坐标
+            int randomCol = (int) (Math.random() * this.cols);
+            // 根据坐标确定Label的位置并显示💣
+            this.labels[randomRow][randomCol].setText(BOMB_EMOJI);
+            // 设置背景颜色
+            this.labels[randomRow][randomCol].setBackground(Color.LIGHT_GRAY);
+            // 设置💣的颜色
+            this.labels[randomRow][randomCol].setForeground(Color.RED);
+        }
+    }
 
     /**
      * 围绕💣的周围标注上数字
      */
-	private void initNumber() {
-		for (int i = 0; i < this.rows; i++) {
-			for (int j = 0; j < this.cols; j++) {
+    private void initNumber() {
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.cols; j++) {
                 String text = labels[i][j].getText();
-				// 如果是炸弹则不标注任何数字
-				if (!BOMB_EMOJI.equals(text)) {
+                // 如果是炸弹则不标注任何数字
+                if (!BOMB_EMOJI.equals(text)) {
                     // 如果不是炸弹，遍历它周围的8个方块，将炸弹的总个数标注在这个方格上
                     // 方块周围的8个方块中炸弹个数
                     int bombCount = 0;
@@ -153,16 +153,16 @@ public class GamePanel extends JPanel {
                     if (bombCount > 0) {
                         labels[i][j].setText(String.valueOf(bombCount));
                     }
-				}
-			}
-		}
-	}
+                }
+            }
+        }
+    }
 
     /**
      * 左键鼠标单击按钮事件方法
      * @param actionButton 被左键单击的Button
      */
-	private void leftClick(MyButton actionButton) {
+    private void leftClick(MyButton actionButton) {
         String buttonText = buttons[actionButton.row][actionButton.col].getText();
         // 如果按钮是空白才可以进行操作，不是空白就是递归的终止条件
         if (BLANK_SPACE.equals(buttonText)) {
@@ -192,7 +192,7 @@ public class GamePanel extends JPanel {
                 }
             }
         }
-	}
+    }
 
     /**
      * 右键鼠标单击按钮事件方法

@@ -7,7 +7,7 @@ import javax.swing.JButton;
  */
 public class MyButton extends JButton {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 扩大访问权限，便于直接访问row的值
