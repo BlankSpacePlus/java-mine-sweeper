@@ -14,6 +14,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -45,6 +46,13 @@ public class GamePanel extends JPanel {
         this.labels = new JLabel[rows][cols];
         this.buttons = new MyButton[rows][cols];
         this.setLayout(null);
+        startGame();
+    }
+
+    /**
+     * 启动游戏或重开游戏
+     */
+    private void startGame() {
         this.initButtons();
         this.initLabels();
         this.initRandomBomb();
@@ -55,8 +63,8 @@ public class GamePanel extends JPanel {
      * 初始化按钮数组
      */
     private void initButtons() {
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.cols; j++) {
                 // 创建按钮实例
                 MyButton button = new MyButton();
                 // 根据Label大小设置按钮的大小边界
@@ -64,7 +72,7 @@ public class GamePanel extends JPanel {
                 // 将Button逐一添加到Panel里
                 this.add(button);
                 // 将按钮引用存一下
-                buttons[i][j] = button;
+                this.buttons[i][j] = button;
                 // 设置按钮坐标属性
                 button.row = i;
                 button.col = j;
@@ -90,7 +98,7 @@ public class GamePanel extends JPanel {
     /**
      * 初始化绘制扫雷的边框
      */
-    private void initLabels(){
+    private void initLabels() {
         for (int i = 0; i < this.rows; i++) {
             for (int j = 0; j < this.cols; j++) {
                 JLabel label = new JLabel(BLANK_SPACE, JLabel.CENTER);
@@ -105,7 +113,7 @@ public class GamePanel extends JPanel {
                 // 将方格加入到Panel中
                 this.add(label);
                 // 将方格引用存一下
-                labels[i][j] = label;
+                this.labels[i][j] = label;
             }
         }
     }
@@ -134,7 +142,7 @@ public class GamePanel extends JPanel {
     private void initNumber() {
         for (int i = 0; i < this.rows; i++) {
             for (int j = 0; j < this.cols; j++) {
-                String text = labels[i][j].getText();
+                String text = this.labels[i][j].getText();
                 // 如果是炸弹则不标注任何数字
                 if (!BOMB_EMOJI.equals(text)) {
                     // 如果不是炸弹，遍历它周围的8个方块，将炸弹的总个数标注在这个方格上
@@ -145,13 +153,13 @@ public class GamePanel extends JPanel {
                         int row = i + offset[0];
                         int col = j + offset[1];
                         // 判断是否越界
-                        if (checkOutOfBound(row, col) && BOMB_EMOJI.equals(labels[row][col].getText())) {
+                        if (checkOutOfBound(row, col) && BOMB_EMOJI.equals(this.labels[row][col].getText())) {
                             bombCount++;
                         }
                     }
                     // 如果炸弹的个数不为0则标注出来
                     if (bombCount > 0) {
-                        labels[i][j].setText(String.valueOf(bombCount));
+                        this.labels[i][j].setText(String.valueOf(bombCount));
                     }
                 }
             }
@@ -160,46 +168,49 @@ public class GamePanel extends JPanel {
 
     /**
      * 左键鼠标单击按钮事件方法
+     *
      * @param actionButton 被左键单击的Button
      */
     private void leftClick(MyButton actionButton) {
-        String buttonText = buttons[actionButton.row][actionButton.col].getText();
+        String buttonText = this.buttons[actionButton.row][actionButton.col].getText();
         // 如果按钮是空白才可以进行操作，不是空白就是递归的终止条件
         if (BLANK_SPACE.equals(buttonText)) {
-            String labelText = labels[actionButton.row][actionButton.col].getText();
+            String labelText = this.labels[actionButton.row][actionButton.col].getText();
             // 将当前按钮设置为不可见
             actionButton.setVisible(false);
             // 判断Label中的内容：数字/炸弹/空白
             if (BLANK_SPACE.equals(labelText)) {
                 // 如果是空的则将他周围空的按钮都打开进入递归
-                for (int[] offset: OFFSETS) {
+                for (int[] offset : OFFSETS) {
                     int newRow = actionButton.row + offset[0];
                     int newCol = actionButton.col + offset[1];
                     if (checkOutOfBound(newRow, newCol)) {
-                        MyButton button = buttons[newRow][newCol];
+                        MyButton button = this.buttons[newRow][newCol];
                         if (button.isVisible()) {
                             // 进入递归
-                            leftClick(button);
+                            this.leftClick(button);
                         }
                     }
                 }
             } else if (BOMB_EMOJI.equals(labelText)) {
                 // 如果是炸弹则将全部按钮都打开游戏结束
-                for (int i = 0; i < rows; i++) {
-                    for (int j = 0; j < cols; j++) {
-                        buttons[i][j].setVisible(false);
+                for (int i = 0; i < this.rows; i++) {
+                    for (int j = 0; j < this.cols; j++) {
+                        this.buttons[i][j].setVisible(false);
                     }
                 }
+                this.doGameOver();
             }
         }
     }
 
     /**
      * 右键鼠标单击按钮事件方法
+     *
      * @param actionButton 被右键单击的Button
      */
     private void rightClick(MyButton actionButton) {
-        String buttonText = buttons[actionButton.row][actionButton.col].getText();
+        String buttonText = this.buttons[actionButton.row][actionButton.col].getText();
         // 判断Button中的内容：红旗/问号/空白
         if (BLANK_SPACE.equals(buttonText)) {           // 内容为空白
             // 变成🚩
@@ -215,12 +226,27 @@ public class GamePanel extends JPanel {
 
     /**
      * 越界检查
+     *
      * @param row 行号
      * @param col 列号
      * @return 没有越界
      */
     private boolean checkOutOfBound(int row, int col) {
         return row >= 0 && row < this.rows && col >= 0 && col < this.cols;
+    }
+
+    /**
+     * 判定游戏结束后执行操作
+     */
+    private void doGameOver() {
+        int option = JOptionPane.showConfirmDialog(this, "是否重新开始？", "踩雷啦", JOptionPane.YES_NO_OPTION);
+        if (option == JOptionPane.YES_OPTION) {
+            // 支持刷新JPanel面板并重新覆盖按钮
+            this.removeAll();
+            this.repaint();
+            this.startGame();
+            this.revalidate();
+        }
     }
 
 }
