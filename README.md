@@ -56,3 +56,13 @@
 ## 参考资料
 
 - [Emoji网站](https://emojipedia.org/)
+
+## 笔记
+
+Swing组件刷新代码：
+```java
+this.removeAll();
+this.repaint();
+// do something
+this.revalidate();
+```

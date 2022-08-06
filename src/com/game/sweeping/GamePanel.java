@@ -37,14 +37,14 @@ public class GamePanel extends JPanel {
     private final JLabel[][] labels;
 
     // 存储界面中每一个方块按钮的绘制信息
-    private final MyButton[][] buttons;
+    private final GameButton[][] buttons;
 
     public GamePanel(int rows, int cols) {
         this.rows = rows;
         this.cols = cols;
         this.bombCount = rows * cols / 10;
         this.labels = new JLabel[rows][cols];
-        this.buttons = new MyButton[rows][cols];
+        this.buttons = new GameButton[rows][cols];
         this.setLayout(null);
         startGame();
     }
@@ -66,7 +66,7 @@ public class GamePanel extends JPanel {
         for (int i = 0; i < this.rows; i++) {
             for (int j = 0; j < this.cols; j++) {
                 // 创建按钮实例
-                MyButton button = new MyButton();
+                GameButton button = new GameButton();
                 // 根据Label大小设置按钮的大小边界
                 button.setBounds(j * BLOCK_WIDTH, i * BLOCK_HEIGHT, BLOCK_WIDTH, BLOCK_HEIGHT);
                 // 将Button逐一添加到Panel里
@@ -82,10 +82,10 @@ public class GamePanel extends JPanel {
                     public void mouseClicked(MouseEvent e) {
                         if (e.getButton() == MouseEvent.BUTTON1) {
                             // 左键单击
-                            leftClick((MyButton) e.getSource());
+                            leftClick((GameButton) e.getSource());
                         } else if (e.getButton() == MouseEvent.BUTTON3) {
                             // 右键单击
-                            rightClick((MyButton) e.getSource());
+                            rightClick((GameButton) e.getSource());
                         }
                     }
                 });
@@ -171,7 +171,7 @@ public class GamePanel extends JPanel {
      *
      * @param actionButton 被左键单击的Button
      */
-    private void leftClick(MyButton actionButton) {
+    private void leftClick(GameButton actionButton) {
         String buttonText = this.buttons[actionButton.row][actionButton.col].getText();
         // 如果按钮是空白才可以进行操作，不是空白就是递归的终止条件
         if (BLANK_SPACE.equals(buttonText)) {
@@ -185,7 +185,7 @@ public class GamePanel extends JPanel {
                     int newRow = actionButton.row + offset[0];
                     int newCol = actionButton.col + offset[1];
                     if (checkOutOfBound(newRow, newCol)) {
-                        MyButton button = this.buttons[newRow][newCol];
+                        GameButton button = this.buttons[newRow][newCol];
                         if (button.isVisible()) {
                             // 进入递归
                             this.leftClick(button);
@@ -209,7 +209,7 @@ public class GamePanel extends JPanel {
      *
      * @param actionButton 被右键单击的Button
      */
-    private void rightClick(MyButton actionButton) {
+    private void rightClick(GameButton actionButton) {
         String buttonText = this.buttons[actionButton.row][actionButton.col].getText();
         // 判断Button中的内容：红旗/问号/空白
         if (BLANK_SPACE.equals(buttonText)) {           // 内容为空白

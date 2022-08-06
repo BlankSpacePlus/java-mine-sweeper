@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/java-mine-sweeping.iml" filepath="$PROJECT_DIR$/java-mine-sweeping.iml" />
+      <module fileurl="file://$PROJECT_DIR$/java-mine-sweeper.iml" filepath="$PROJECT_DIR$/java-mine-sweeper.iml" />
     </modules>
   </component>
 </project>
